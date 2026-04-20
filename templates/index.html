@@ -1,8 +1,60 @@
 <!--<h1>Feedback System Working</h1> --> 
-<! DOCTYPE html>
+<!DOCTYPE html>
 <html>
     <head>
         <title>Feedback System</title>
+
+        <style>
+        body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #74ebd5, #ACB6E5);
+    margin: 0;
+}
+
+.container {
+    width: 40%;
+    margin: auto;
+    margin-top: 50px;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0px 0px 10px gray;
+}
+
+h2, h3 {
+    text-align: center;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+button {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #45a049;
+}
+
+.feedback {
+    background: #f1f1f1;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 6px;
+}
+</style>
     </head>
     <body>
     <h2> Feedback Form</h2>
@@ -15,7 +67,7 @@
     placeholder="Your Email" required>
         <br><br>
         <input type="number" name="rating"
-    placeholder="Rating (1-5)" min="1" max="5" required
+    placeholder="Rating (1-5)" min="1" max="5" required>
         <br><br>
 
         <textarea name="message"
@@ -32,5 +84,9 @@
     {% for f in feedbacks %}
         <p><b>{{ f.name}}</b> -{{ f.message}}</p>
         {% endfor%}
+
+        
+
+
     </body>
 </html>
