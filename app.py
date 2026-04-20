@@ -1,15 +1,19 @@
 # Import required modules from Flask
-from flask import Flask, request, jsonify
+from flask import Flask,render_template, request,redirect, jsonify
 
-# Create Flask appication instance
+# Create Flask application instance
 app = Flask(__name__)
 # List to store feedback data in memory
 feedbacks = []
 
 # Home route to check if server is running
+# @app.route("/")
+# def home():
+#     return "Feedback System Running" # simple sever status message
+
 @app.route("/")
 def home():
-    return "Feedback System Running" # simple sever status message
+    return render_template("index.html",feedbacks=feedbacks)
 
 from datetime import datetime
 # Add feedback(POST)
@@ -17,7 +21,18 @@ from datetime import datetime
 @app.route("/feedback",methods = ["POST"])
 def add_feedback():
     # Get JSON data sent by the client
-    data = request.get_json()
+    data = request.get_json(silent= True)
+    if not data:
+        data = {
+            "name":
+            request.form.get("name"),
+            "email":
+            request.form.get("email"),
+            "rating":
+            request.form.get("rating"),
+            "message":
+            request.form.get("message")
+        }
 
     # Validation: check if required fields are present
     if not data.get("name") or not data.get("email") or not data.get("rating"):
@@ -40,17 +55,19 @@ datetime.now().strftime("%Y-%m-%d  %H:%M:%S") # Current timestamp
     # Add feedback to list
     feedbacks.append(feedback)
 
+    return redirect("/")
+
     # Return saved feedback as response
-    return jsonify({"message":"Feedback added","data": feedback})
+#     return jsonify({"message":"Feedback added","data": feedback})
 
-# GET API to retrieve all feedbacks
-# Get feedback(GET)
-@app.route("/feedback",methods = ["GET"])
-def get_feedback():
+# # GET API to retrieve all feedbacks
+# # Get feedback(GET)
+# @app.route("/feedback",methods = ["GET"])
+# def get_feedback():
 
-    # Return all stored feedbacks
-    return jsonify(feedbacks)
+#     # Return all stored feedbacks
+#     return jsonify(feedbacks)
 
-# Run server(Flask application)
+# # Run server(Flask application)
 if __name__ == "__main__":
-    app.run(host = "0.0.0.0", debug = True)# Enable debug mode for development
+    app.run(host = "0.0.0.0", debug= True)
