@@ -1,73 +1,75 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Feedback System</title>
+    <title>Admin Panel</title>
 
     <style>
+        /* Page background and font styling */
         body {
             font-family: Arial, sans-serif;
             background: #f4f6f9;
             margin: 0;
         }
 
+        /* Main container for admin panel */
         .container {
-            width: 40%;
+            width: 50%;
             margin: auto;
-            margin-top: 60px;
-            background: white;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+            margin-top: 40px;
         }
 
+        /* Heading styling */
         h2 {
             text-align: center;
             color: #2c3e50;
         }
 
-        input, textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-size: 14px;
-        }
-
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: #2c3e50;
-        }
-
-        button {
+        /* Each feedback card styling */
+        .feedback {
+            background: white;
+            padding: 15px;
             margin-top: 15px;
-            width: 100%;
-            padding: 10px;
+            border-radius: 8px;
+            border-left: 5px solid #2c3e50;
+            box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+        }
+
+        /* User name styling */
+        .name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        /* Feedback message styling */
+        .message {
+            margin-top: 8px;
+            color: #555;
+        }
+
+        /* Buttons container */
+        .actions {
+            margin-top: 10px;
+        }
+
+        /* Common button styling */
+        .btn {
+            padding: 5px 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 13px;
+            margin-right: 5px;
+        }
+
+        /* Edit button style */
+        .edit {
             background: #2c3e50;
             color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 15px;
         }
 
-        button:hover {
-            background: #1a252f;
-        }
-
-        .link {
-            text-align: center;
-            margin-top: 15px;
-        }
-
-        .link a {
-            text-decoration: none;
-            color: #2c3e50;
-            font-size: 14px;
-        }
-
-        .link a:hover {
-            text-decoration: underline;
+        /* Delete button style */
+        .delete {
+            background: #7f8c8d;
+            color: white;
         }
     </style>
 </head>
@@ -76,28 +78,42 @@
 
 <div class="container">
 
-    <!-- Title -->
-    <h2>Feedback Form</h2>
+    <!-- Page Title -->
+    <h2>Admin Panel</h2>
 
-    <!-- Form -->
-    <form method="POST" action="/feedback">
+    <!-- Loop through all feedbacks from backend -->
+    {% for f in feedbacks %}
 
-        <input type="text" name="name" placeholder="Your Name" required>
+        <!-- Single feedback card -->
+        <div class="feedback">
 
-        <input type="email" name="email" placeholder="Your Email" required>
+            <!-- Display user name -->
+            <div class="name">{{ f[1] }}</div>
 
-        <input type="number" name="rating" placeholder="Rating (1-5)" min="1" max="5" required>
+            <!-- Display star rating -->
+            <div>
+                {% for i in range(f[3]) %}
+                    ⭐
+                {% endfor %}
+            </div>
 
-        <textarea name="message" placeholder="Your Message" required></textarea>
+            <!-- Display feedback message -->
+            <div class="message">{{ f[4] }}</div>
 
-        <button type="submit">Submit Feedback</button>
+            <!-- Action buttons -->
+            <div class="actions">
 
-    </form>
+                <!-- Edit feedback -->
+                <a href="/edit/{{ f[0] }}" class="btn edit">Edit</a>
 
-    <!-- Admin link -->
-    <div class="link">
-        <a href="/admin">Go to Admin Panel</a>
-    </div>
+                <!-- Delete feedback -->
+                <a href="/delete/{{ f[0] }}" class="btn delete">Delete</a>
+
+            </div>
+
+        </div>
+
+    {% endfor %}
 
 </div>
 
