@@ -1,42 +1,105 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Panel</title>
+    <title>Feedback System</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+        }
+
+        .container {
+            width: 40%;
+            margin: auto;
+            margin-top: 60px;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #2c3e50;
+        }
+
+        button {
+            margin-top: 15px;
+            width: 100%;
+            padding: 10px;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #1a252f;
+        }
+
+        .link {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .link a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+
+        .link a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
+
 <body>
 
-<!-- Heading for admin page -->
-<h2>Admin Panel</h2>
+<div class="container">
 
-<!-- Loop through all feedbacks -->
-{% for f in feedbacks %}
+    <!-- Title -->
+    <h2>Feedback Form</h2>
 
-    <!-- Each feedback card -->
-    <div class="feedback">
+    <!-- Form -->
+    <form method="POST" action="/feedback">
 
-        <!-- Display user name -->
-        <b>{{ f[1] }} <!-- name --> </b><br>
+        <input type="text" name="name" placeholder="Your Name" required>
 
-        <!-- Display rating as stars -->
-        {% for i in range(f[3]|int) %}
-            ⭐
-        {% endfor %}
+        <input type="email" name="email" placeholder="Your Email" required>
 
-        <br>
+        <input type="number" name="rating" placeholder="Rating (1-5)" min="1" max="5" required>
 
-        <!-- Display user message -->
-        {{ f[4] }} <!-- message --> <br>
+        <textarea name="message" placeholder="Your Message" required></textarea>
 
-        <a href = "/edit/ {{f[0]}}">Edit</a>
-        <!-- Delete button (calls delete route with feedback id) -->
-        <a href="/delete/{{ f[0] }}">Delete</a>
+        <button type="submit">Submit Feedback</button>
 
+    </form>
+
+    <!-- Admin link -->
+    <div class="link">
+        <a href="/admin">Go to Admin Panel</a>
     </div>
 
-    <!-- Line separator between feedbacks -->
-    <hr>
-
-{% endfor %}
+</div>
 
 </body>
 </html>
