@@ -1,5 +1,5 @@
 # Import required modules from Flask
-from flask import Flask, render_template, request, redirect, jsonify
+from flask import Flask, render_template, request, redirect, jsonify, session
 
 # Import SQLite for database
 import sqlite3  
@@ -10,23 +10,26 @@ from datetime import datetime
 # Create Flask application instance
 app = Flask(__name__)
 
+# Secret key is required for session (login system)
+app.secret_key = "mysecretkey"
+
 # -----------------------------
 # ✅ DATABASE CREATE FUNCTION
 # -----------------------------
 def init_db():
-    # Connect to database (it will create file if not exists)
+    # Connect to SQLite database (creates file if not exists)
     conn = sqlite3.connect("database.db")
     c = conn.cursor()
 
-    # Create feedback table if it doesn't exist
+    # Create feedback table if it does not exist
     c.execute("""
     CREATE TABLE IF NOT EXISTS feedback (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT,
-        email TEXT,
-        rating INTEGER,
-        message TEXT,
-        time TEXT
+        id INTEGER PRIMARY KEY AUTOINCREMENT,  # Unique ID
+        name TEXT,                             # User name
+        email TEXT,                            # User email
+        rating INTEGER,                        # Rating (1-5)
+        message TEXT,                          # Feedback message
+        time TEXT                              # Timestamp
     )
     """)
 
@@ -46,15 +49,15 @@ def home():
     return render_template("index.html")
 
 # -----------------------------
-# 📥 ADD FEEDBACK (POST)
+# 📥 ADD FEEDBACK
 # -----------------------------
 @app.route("/feedback", methods=["POST"])
 def add_feedback():
 
-    # Try to get JSON data (for Postman/API)
+    # Try to get JSON data (for Postman/API testing)
     data = request.get_json(silent=True)
 
-    # If no JSON, get data from form (HTML form)
+    # If no JSON, get data from HTML form
     if not data:
         data = {
             "name": request.form.get("name"),
@@ -63,7 +66,7 @@ def add_feedback():
             "message": request.form.get("message")
         }
 
-    # Validation: check required fields
+    # Validation: required fields check
     if not data.get("name") or not data.get("email") or not data.get("rating"):
         return jsonify({"error": "Name, email and rating are required"}), 400
 
@@ -75,15 +78,15 @@ def add_feedback():
     conn = sqlite3.connect("database.db")
     c = conn.cursor()
 
-    # Insert data into database
+    # Insert feedback into database
     c.execute(
         "INSERT INTO feedback (name,email,rating,message,time) VALUES (?,?,?,?,?)",
         (
-            data["name"],       # user name
-            data["email"],      # user email
-            data["rating"],     # rating value
-            data["message"],    # feedback message
-            datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # current time
+            data["name"],       # User name
+            data["email"],      # User email
+            data["rating"],     # Rating
+            data["message"],    # Feedback message
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # Current time
         )
     )
 
@@ -91,14 +94,38 @@ def add_feedback():
     conn.commit()
     conn.close()
 
-    # Redirect back to home page
+    # Redirect user back to form page
     return redirect("/")
 
 # -----------------------------
-# 🛠 ADMIN PANEL (VIEW)
+# 🔐 LOGIN ROUTE
+# -----------------------------
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    # If form submitted
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        # Simple static login check
+        if username == "admin" and password == "1234":
+            session["admin"] = True  # Store login session
+            return redirect("/admin")
+        else:
+            return "Invalid Username or Password"
+
+    # Show login page
+    return render_template("login.html")
+
+# -----------------------------
+# 🛠 ADMIN PANEL (PROTECTED)
 # -----------------------------
 @app.route("/admin")
 def admin():
+    # Protect admin panel (only logged-in users allowed)
+    if not session.get("admin"):
+        return redirect("/login")
+
     # Connect to database
     conn = sqlite3.connect("database.db")
     c = conn.cursor()
@@ -107,29 +134,40 @@ def admin():
     c.execute("SELECT * FROM feedback")
     feedbacks = c.fetchall()
 
-    # Close connection
     conn.close()
 
     # Send data to admin page
     return render_template("admin.html", feedbacks=feedbacks)
 
 # -----------------------------
+# 🚪 LOGOUT
+# -----------------------------
+@app.route("/logout")
+def logout():
+    # Remove admin session
+    session.pop("admin", None)
+
+    # Redirect to login page
+    return redirect("/login")
+
+# -----------------------------
 # 🗑 DELETE FEEDBACK
 # -----------------------------
 @app.route("/delete/<int:id>")
 def delete(id):
-    # Connect to database
+    # Allow only logged-in admin
+    if not session.get("admin"):
+        return redirect("/login")
+
     conn = sqlite3.connect("database.db")
     c = conn.cursor()
 
     # Delete feedback by ID
     c.execute("DELETE FROM feedback WHERE id=?", (id,))
 
-    # Save and close
     conn.commit()
     conn.close()
 
-    # Redirect back to admin panel
     return redirect("/admin")
 
 # -----------------------------
@@ -137,11 +175,14 @@ def delete(id):
 # -----------------------------
 @app.route("/edit/<int:id>", methods=["GET", "POST"])
 def edit(id):
-    # Connect to database
+    # Allow only logged-in admin
+    if not session.get("admin"):
+        return redirect("/login")
+
     conn = sqlite3.connect("database.db")
     c = conn.cursor()
 
-    # If form is submitted (POST request)
+    # If form submitted → update data
     if request.method == "POST":
         name = request.form.get("name")
         message = request.form.get("message")
@@ -152,14 +193,12 @@ def edit(id):
             (name, message, id)
         )
 
-        # Save and close
         conn.commit()
         conn.close()
 
-        # Redirect to admin panel
         return redirect("/admin")
 
-    # If GET request → fetch existing data
+    # If GET request → fetch existing feedback
     c.execute("SELECT * FROM feedback WHERE id=?", (id,))
     feedback = c.fetchone()
 
