@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+</head>
+<body>
+
+<!-- Heading for admin page -->
+<h2>Admin Panel</h2>
+
+<!-- Loop through all feedbacks -->
+{% for f in feedbacks %}
+
+    <!-- Each feedback card -->
+    <div class="feedback">
+
+        <!-- Display user name -->
+        <b>{{ f.name }}</b><br>
+
+        <!-- Display rating as stars -->
+        {% for i in range(f.rating|int) %}
+            ⭐
+        {% endfor %}
+
+        <br>
+
+        <!-- Display user message -->
+        {{ f.message }}<br>
+
+        <!-- Delete button (calls delete route with feedback id) -->
+        <a href="/delete/{{ f.id }}">Delete</a>
+
+    </div>
+
+    <!-- Line separator between feedbacks -->
+    <hr>
+
+{% endfor %}
+
+</body>
+</html>

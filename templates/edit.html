@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<!-- Page heading -->
+<h2>Edit Feedback</h2>
+
+<!-- Form to update feedback -->
+<form method="POST">
+
+    <!-- Input field for editing user name (pre-filled with existing value) -->
+    <input type="text" name="name" value="{{ f.name }}">
+    <br><br>
+
+    <!-- Textarea for editing message (pre-filled with existing message) -->
+    <textarea name="message">{{ f.message }}</textarea>
+    <br><br>
+
+    <!-- Submit button to update feedback -->
+    <button type="submit">Update</button>
+
+</form>
+
+</body>
+</html>
