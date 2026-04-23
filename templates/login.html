@@ -1,33 +1,99 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <!-- Page title shown in browser tab -->
-    <title>Login</title>
+    <!-- Page title (browser tab me show hota hai) -->
+    <title>Admin Login</title>
+
+    <!-- Internal CSS styling -->
+    <style>
+
+        /* Whole page styling */
+        body {
+            font-family: Arial, sans-serif; /* Font set */
+            background: linear-gradient(135deg, #4facfe, #00f2fe); /* Gradient background */
+            height: 100vh; /* Full screen height */
+            display: flex; /* Center content */
+            justify-content: center; /* Horizontal center */
+            align-items: center; /* Vertical center */
+            margin: 0; /* Default margin remove */
+        }
+
+        /* Login box container */
+        .login-box {
+            background: white; /* White card */
+            padding: 30px; /* Inner spacing */
+            width: 320px; /* Fixed width */
+            border-radius: 12px; /* Rounded corners */
+            box-shadow: 0px 10px 25px rgba(0,0,0,0.2); /* Shadow effect */
+            text-align: center; /* Center text */
+        }
+
+        /* Heading style */
+        h2 {
+            margin-bottom: 20px; /* Space below heading */
+            color: #333; /* Dark text color */
+        }
+
+        /* Input fields styling */
+        input {
+            width: 100%; /* Full width */
+            padding: 10px; /* Inner space */
+            margin: 8px 0; /* Space between inputs */
+            border: 1px solid #ccc; /* Light border */
+            border-radius: 6px; /* Rounded edges */
+            outline: none; /* Remove blue outline */
+        }
+
+        /* Input focus effect */
+        input:focus {
+            border-color: #4facfe; /* Blue border on focus */
+        }
+
+        /* Login button styling */
+        button {
+            width: 100%; /* Full width button */
+            padding: 10px; /* Inner spacing */
+            background: #4facfe; /* Blue color */
+            color: white; /* White text */
+            border: none; /* No border */
+            border-radius: 6px; /* Rounded corners */
+            cursor: pointer; /* Pointer on hover */
+            font-size: 16px; /* Text size */
+            margin-top: 10px; /* Space above button */
+        }
+
+        /* Button hover effect */
+        button:hover {
+            background: #00c6ff; /* Lighter blue */
+        }
+
+    </style>
 </head>
 
 <body>
 
-    <!-- Heading of login page -->
-    <h2>Admin Login</h2>
+    <!-- Login container box -->
+    <div class="login-box">
 
-    <!-- Login form starts -->
-    <form method="POST">
+        <!-- Page heading -->
+        <h2>Admin Login</h2>
 
-        <!-- Username input field -->
-        <input type="text" name="username" placeholder="Username" required>
+        <!-- Login form starts -->
+        <form method="POST">
 
-        <br><br>
+            <!-- Username input -->
+            <input type="text" name="username" placeholder="Username" required>
 
-        <!-- Password input field -->
-        <input type="password" name="password" placeholder="Password" required>
+            <!-- Password input -->
+            <input type="password" name="password" placeholder="Password" required>
 
-        <br><br>
+            <!-- Submit button -->
+            <button type="submit">Login</button>
 
-        <!-- Submit button -->
-        <button type="submit">Login</button>
+        </form>
+        <!-- Login form ends -->
 
-    </form>
-    <!-- Login form ends -->
+    </div>
 
 </body>
 </html>
