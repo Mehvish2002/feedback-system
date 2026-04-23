@@ -15,20 +15,21 @@
     <div class="feedback">
 
         <!-- Display user name -->
-        <b>{{ f.name }}</b><br>
+        <b>{{ f.[1] }} <!-- name --> </b><br>
 
         <!-- Display rating as stars -->
-        {% for i in range(f.rating|int) %}
+        {% for i in range(f[3]|int) %}
             ⭐
         {% endfor %}
 
         <br>
 
         <!-- Display user message -->
-        {{ f.message }}<br>
+        {{ f[4] }} <!-- message --> <br>
 
+        <a href = "/edit/ {{f[0]}}">Edit</a>
         <!-- Delete button (calls delete route with feedback id) -->
-        <a href="/delete/{{ f.id }}">Delete</a>
+        <a href="/delete/{{ f[0] }}">Delete</a>
 
     </div>
 

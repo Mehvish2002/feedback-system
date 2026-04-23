@@ -9,11 +9,11 @@
 <form method="POST">
 
     <!-- Input field for editing user name (pre-filled with existing value) -->
-    <input type="text" name="name" value="{{ f.name }}">
+    <input type="text" name="name" value="{{f[1] }}">
     <br><br>
 
     <!-- Textarea for editing message (pre-filled with existing message) -->
-    <textarea name="message">{{ f.message }}</textarea>
+    <textarea name="message">{{ f[4] }}</textarea>
     <br><br>
 
     <!-- Submit button to update feedback -->
