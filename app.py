@@ -24,12 +24,12 @@ def init_db():
     # Create feedback table if it does not exist
     c.execute("""
     CREATE TABLE IF NOT EXISTS feedback (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,  # Unique ID
-        name TEXT,                             # User name
-        email TEXT,                            # User email
-        rating INTEGER,                        # Rating (1-5)
-        message TEXT,                          # Feedback message
-        time TEXT                              # Timestamp
+        id INTEGER PRIMARY KEY AUTOINCREMENT, 
+        name TEXT,                             
+        email TEXT,                            
+        rating INTEGER,                        
+        message TEXT,                          
+        time TEXT                              
     )
     """)
 
